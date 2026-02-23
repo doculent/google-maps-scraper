@@ -6,7 +6,12 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_asyn
 
 load_dotenv()
 
-DATABASE_URL = os.environ["DATABASE_URL"]
+DATABASE_URL = (
+    "postgresql+asyncpg://"
+    f"{os.environ['POSTGRES_USER']}:{os.environ['POSTGRES_PASSWORD']}"
+    f"@{os.environ['POSTGRES_HOST']}:{os.environ['POSTGRES_PORT']}"
+    f"/{os.environ['POSTGRES_NAME']}"
+)
 
 engine = create_async_engine(DATABASE_URL, echo=False)
 

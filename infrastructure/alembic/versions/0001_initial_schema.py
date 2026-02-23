@@ -18,6 +18,8 @@ depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
+    op.execute("CREATE SCHEMA IF NOT EXISTS scraper")
+
     op.create_table(
         "scraped_entities",
         sa.Column("id", UUID(as_uuid=True), primary_key=True),
@@ -55,19 +57,37 @@ def upgrade() -> None:
             nullable=False,
             server_default=sa.func.now(),
         ),
+        schema="scraper",
     )
 
-    op.create_index("ix_scraped_entities_source", "scraped_entities", ["source"])
-    op.create_index("ix_scraped_entities_source_id", "scraped_entities", ["source_id"])
+    op.create_index(
+        "ix_scraped_entities_source", "scraped_entities", ["source"], schema="scraper"
+    )
+    op.create_index(
+        "ix_scraped_entities_source_id", "scraped_entities", ["source_id"], schema="scraper"
+    )
     op.create_index(
         "ix_scraped_entities_source_source_id",
         "scraped_entities",
         ["source", "source_id"],
+        schema="scraper",
     )
 
 
 def downgrade() -> None:
-    op.drop_index("ix_scraped_entities_source_source_id", table_name="scraped_entities")
-    op.drop_index("ix_scraped_entities_source_id", table_name="scraped_entities")
-    op.drop_index("ix_scraped_entities_source", table_name="scraped_entities")
-    op.drop_table("scraped_entities")
+    op.drop_index(
+        "ix_scraped_entities_source_source_id",
+        table_name="scraped_entities",
+        schema="scraper",
+    )
+    op.drop_index(
+        "ix_scraped_entities_source_id",
+        table_name="scraped_entities",
+        schema="scraper",
+    )
+    op.drop_index(
+        "ix_scraped_entities_source",
+        table_name="scraped_entities",
+        schema="scraper",
+    )
+    op.drop_table("scraped_entities", schema="scraper")
