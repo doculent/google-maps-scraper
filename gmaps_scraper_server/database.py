@@ -1,10 +1,11 @@
 import os
 from typing import AsyncGenerator
 
-from dotenv import load_dotenv
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
-load_dotenv()
+from gmaps_scraper_server.config import load_secrets
+
+load_secrets()
 
 DATABASE_URL = (
     "postgresql+asyncpg://"

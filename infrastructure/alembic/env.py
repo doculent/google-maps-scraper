@@ -9,10 +9,11 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
 
 import sqlalchemy as sa
 from alembic import context
-from dotenv import load_dotenv
 from sqlalchemy.ext.asyncio import create_async_engine
 
-load_dotenv()
+from gmaps_scraper_server.config import load_secrets
+
+load_secrets()
 
 # Alembic Config object — provides access to values in alembic.ini
 config = context.config
